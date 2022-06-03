@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/nx/schemas/workspace-schema.json",
+  "version": 2,
+  "projects": {
+    "microservice": "packages/microservice",
+    "microservice-e2e": "e2e/microservice-e2e"
+  }
+}
