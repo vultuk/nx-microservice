@@ -3,7 +3,7 @@
   "name": "microservice",
   "version": "0.0.1",
   "generators": {
-    "microservice": {
+    "app": {
       "factory": "./src/generators/microservice/generator",
       "schema": "./src/generators/microservice/schema.json",
       "description": "microservice generator"

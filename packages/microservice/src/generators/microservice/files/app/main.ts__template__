@@ -1,0 +1,8 @@
+import { middleware } from './middleware';
+import {Microservice} from '@vultuk/microservice-http';
+
+import routes from './routes';
+
+Microservice({ port: Number(process.env.PORT) || <%= localPort %> })(middleware)(
+  routes
+)();

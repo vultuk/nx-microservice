@@ -1,76 +1,38 @@
-import {
-  addProjectConfiguration,
-  formatFiles,
-  generateFiles,
-  getWorkspaceLayout,
-  names,
-  offsetFromRoot,
-  Tree,
-} from '@nrwl/devkit';
-import * as path from 'path';
-import { MicroserviceGeneratorSchema } from './schema';
+import {Tree} from '@nrwl/devkit';
+import {applicationGenerator as expressApplication} from '@nrwl/express';
+import {libraryGenerator as jsLibrary} from '@nrwl/js';
+import {Linter} from '@nrwl/linter';
 
-interface NormalizedSchema extends MicroserviceGeneratorSchema {
-  projectName: string;
-  projectRoot: string;
-  projectDirectory: string;
-  parsedTags: string[];
-}
+import {CopyApplicationFiles, CopyLibraryFiles} from './files';
+import NormalizeSchema from './normalizeSchema';
 
-function normalizeOptions(
-  tree: Tree,
-  options: MicroserviceGeneratorSchema
-): NormalizedSchema {
-  const name = names(options.name).fileName;
-  const projectDirectory = options.directory
-    ? `${names(options.directory).fileName}/${name}`
-    : name;
-  const projectName = projectDirectory.replace(new RegExp('/', 'g'), '-');
-  const projectRoot = `${getWorkspaceLayout(tree).libsDir}/${projectDirectory}`;
-  const parsedTags = options.tags
-    ? options.tags.split(',').map((s) => s.trim())
-    : [];
+export default async function (tree: Tree, schema: any) {
+  const apiName = `api-${schema.name}`;
 
-  return {
-    ...options,
-    projectName,
-    projectRoot,
-    projectDirectory,
-    parsedTags,
-  };
-}
-
-function addFiles(tree: Tree, options: NormalizedSchema) {
-  const templateOptions = {
-    ...options,
-    ...names(options.name),
-    offsetFromRoot: offsetFromRoot(options.projectRoot),
-    template: '',
-  };
-  generateFiles(
-    tree,
-    path.join(__dirname, 'files'),
-    options.projectRoot,
-    templateOptions
-  );
-}
-
-export default async function (
-  tree: Tree,
-  options: MicroserviceGeneratorSchema
-) {
-  const normalizedOptions = normalizeOptions(tree, options);
-  addProjectConfiguration(tree, normalizedOptions.projectName, {
-    root: normalizedOptions.projectRoot,
-    projectType: 'library',
-    sourceRoot: `${normalizedOptions.projectRoot}/src`,
-    targets: {
-      build: {
-        executor: '@vultuk/microservice:build',
-      },
-    },
-    tags: normalizedOptions.parsedTags,
+  const applicationOptions = NormalizeSchema(tree, {
+    ...schema,
+    name: apiName,
   });
-  addFiles(tree, normalizedOptions);
-  await formatFiles(tree);
+  const libraryOptions = NormalizeSchema(tree, schema, true);
+
+  // Create the microservice application
+  await expressApplication(tree, {
+    name: apiName,
+    skipFormat: false,
+    skipPackageJson: false,
+    unitTestRunner: 'jest',
+    linter: Linter.EsLint,
+    js: false,
+    pascalCaseFiles: false,
+    tags: 'microservice',
+  });
+
+  // Create a suplemental library
+  await jsLibrary(tree, { name: 'data-access', directory: schema.name });
+
+  // Copy the default files for the application
+  CopyApplicationFiles(tree, applicationOptions, libraryOptions);
+
+  // Copy the default files for the library
+  CopyLibraryFiles(tree, libraryOptions);
 }

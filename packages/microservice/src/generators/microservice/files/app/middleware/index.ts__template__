@@ -1,0 +1,5 @@
+import * as Cors from 'cors';
+
+export const middleware = [Cors()];
+
+export default middleware;

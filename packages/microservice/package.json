@@ -3,5 +3,9 @@
   "version": "0.0.1",
   "main": "src/index.js",
   "generators": "./generators.json",
-  "executors": "./executors.json"
+  "executors": "./executors.json",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "@vultuk/microservice-http": "^1.2.0"
+  }
 }

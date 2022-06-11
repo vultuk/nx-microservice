@@ -1,0 +1,5 @@
+export const GetAll<%= className %> = async () => {
+  return [{ id: 1, name: '<%= className %> 1' },{ id: 2, name: '<%= className %> 2' }];
+};
+
+export default GetAll<%= className %>;

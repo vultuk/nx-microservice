@@ -1,0 +1,9 @@
+import GetAll<%= className %> from './get-all-<%= fileName %>';
+
+describe('GetAll<%= className %>', () => {
+  it('should have the correct array entries', async () => {
+    const entries = await GetAll<%= className %>();
+
+    expect(entries).toEqual([{ id: 1, name: '<%= className %> 1' },{ id: 2, name: '<%= className %> 2' }]);
+  });
+});

@@ -1,0 +1,11 @@
+import {Request, Response} from '@vultuk/microservice-http';
+import { GetAll<%= className %> } from '@<%= scope %>/<%= fileName %>/data-access';
+
+export const get<%= className %> = async (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    data: await GetAll<%= className %>()
+  });
+};
+
+export default get<%= className %>;

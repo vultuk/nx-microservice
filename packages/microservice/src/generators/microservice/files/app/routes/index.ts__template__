@@ -1,0 +1,13 @@
+import {Route} from '@vultuk/microservice-http';
+
+import get<%= className %> from './get-<%= fileName %>';
+
+export const routes: Route[] = [
+  {
+    path: '/<%= fileName %>',
+    method: 'get',
+    fn: get<%= className %>,
+  },
+];
+
+export default routes;
