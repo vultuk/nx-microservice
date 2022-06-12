@@ -1,4 +1,4 @@
-import {Tree} from '@nrwl/devkit';
+import {Tree, updateJson} from '@nrwl/devkit';
 import {applicationGenerator as expressApplication} from '@nrwl/express';
 import {libraryGenerator as jsLibrary} from '@nrwl/js';
 import {Linter} from '@nrwl/linter';
@@ -31,8 +31,20 @@ export default async function (tree: Tree, schema: any) {
   await jsLibrary(tree, { name: 'data-access', directory: schema.name });
 
   // Copy the default files for the application
-  CopyApplicationFiles(tree, applicationOptions, libraryOptions);
+  await CopyApplicationFiles(tree, applicationOptions, libraryOptions);
 
   // Copy the default files for the library
-  CopyLibraryFiles(tree, libraryOptions);
+  await CopyLibraryFiles(tree, libraryOptions);
+
+  await updateJson(
+    tree,
+    `apps/${apiName}/project.json`,
+    (pkgJson: any): any => {
+      // Remove express un-needed configurations from the build script
+      delete pkgJson.targets.build.options.assets;
+      delete pkgJson.targets.build.configurations.production.fileReplacements;
+
+      return pkgJson;
+    }
+  );
 }
