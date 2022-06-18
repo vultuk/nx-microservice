@@ -1,9 +1,9 @@
-import {Tree, updateJson} from '@nrwl/devkit';
-import {applicationGenerator as expressApplication} from '@nrwl/express';
-import {libraryGenerator as jsLibrary} from '@nrwl/js';
-import {Linter} from '@nrwl/linter';
+import { names, Tree, updateJson } from '@nrwl/devkit';
+import { applicationGenerator as expressApplication } from '@nrwl/express';
+import { libraryGenerator as jsLibrary } from '@nrwl/js';
+import { Linter } from '@nrwl/linter';
 
-import {CopyApplicationFiles, CopyLibraryFiles} from './files';
+import { CopyApplicationFiles, CopyLibraryFiles } from './files';
 import NormalizeSchema from './normalizeSchema';
 
 export default async function (tree: Tree, schema: any) {
@@ -28,7 +28,10 @@ export default async function (tree: Tree, schema: any) {
   });
 
   // Create a suplemental library
-  await jsLibrary(tree, { name: 'data-access', directory: schema.name });
+  await jsLibrary(tree, {
+    name: `get-all-${names(schema.name).fileName}`,
+    directory: `${schema.name}/data-access`,
+  });
 
   // Copy the default files for the application
   await CopyApplicationFiles(tree, applicationOptions, libraryOptions);

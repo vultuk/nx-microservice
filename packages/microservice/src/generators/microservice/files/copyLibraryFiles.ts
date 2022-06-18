@@ -1,8 +1,7 @@
-import {generateFiles, names, offsetFromRoot, Tree} from '@nrwl/devkit';
+import { generateFiles, names, offsetFromRoot, Tree } from '@nrwl/devkit';
 import * as path from 'path';
 
 export const CopyLibraryFiles = async (tree: Tree, options: any) => {
-  console.log(options);
   const templateOptions = {
     ...options,
     ...names(options.name),
@@ -13,19 +12,33 @@ export const CopyLibraryFiles = async (tree: Tree, options: any) => {
   await generateFiles(
     tree,
     path.join(__dirname, 'lib'),
-    `${options.projectRoot}/data-access/src`,
+    `${options.projectRoot}/data-access/get-all-${
+      names(options.name).fileName
+    }/src`,
     templateOptions
   );
 
-  await tree.delete(
-    `${options.projectRoot}/data-access/src/lib/${
+  console.log(
+    `${options.projectRoot}/data-access/get-all-${
       names(options.name).fileName
-    }-data-access.spec.ts`
+    }/src/lib/${names(options.name).fileName}-data-access-get-all-${
+      names(options.name).fileName
+    }.spec.ts`
+  );
+
+  await tree.delete(
+    `${options.projectRoot}/data-access/get-all-${
+      names(options.name).fileName
+    }/src/lib/${names(options.name).fileName}-data-access-get-all-${
+      names(options.name).fileName
+    }.spec.ts`
   );
   await tree.delete(
-    `${options.projectRoot}/data-access/src/lib/${
+    `${options.projectRoot}/data-access/get-all-${
       names(options.name).fileName
-    }-data-access.ts`
+    }/src/lib/${names(options.name).fileName}-data-access-get-all-${
+      names(options.name).fileName
+    }.ts`
   );
 };
 

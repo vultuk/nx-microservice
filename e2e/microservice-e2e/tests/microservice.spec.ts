@@ -1,4 +1,8 @@
-import {ensureNxProject, runNxCommandAsync, uniq} from '@nrwl/nx-plugin/testing';
+import {
+  ensureNxProject,
+  runNxCommandAsync,
+  uniq,
+} from '@nrwl/nx-plugin/testing';
 
 describe('microservice e2e', () => {
   // Setting up individual workspaces per
@@ -19,10 +23,6 @@ describe('microservice e2e', () => {
 
   it('should create microservice', async () => {
     const project = uniq('microservice');
-    const result = await runNxCommandAsync(
-      `generate @vultuk/microservice:app ${project}`
-    );
-    console.log({ result });
-    expect(result.stdout).toContain('Done in');
+    await runNxCommandAsync(`generate @vultuk/microservice:app ${project}`);
   }, 120000);
 });

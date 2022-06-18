@@ -1,5 +1,5 @@
 import {Request, Response} from '@vultuk/microservice-http';
-import { GetAll<%= className %> } from '@<%= scope %>/<%= fileName %>/data-access';
+import { GetAll<%= className %> } from '@<%= scope %>/<%= fileName %>/data-access/get-all-<%= fileName %>';
 
 export const get<%= className %> = async (req: Request, res: Response) => {
   res.json({
